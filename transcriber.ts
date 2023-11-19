@@ -24,10 +24,7 @@ class Transcriber {
           response_format: "json",
         });
 
-        console.log("Created transcription response.");
         
-      // 文字起こしの結果を表示
-      console.log("Transcription:", transcriptionResponse);
 
       // GPT-4モデルを使用して文字起こし結果を要約
       const summaryResponse = await this.openai.chat.completions.create({
@@ -52,9 +49,8 @@ class Transcriber {
       return summaryResponse.choices[0].message.content || "";
     } catch (error) {
       console.error("Failed to transcribe audio:", error);
+      throw new Error("failed to transcribe audio");
     }
-
-    return "";
   }
 }
 

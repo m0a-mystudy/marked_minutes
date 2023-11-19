@@ -11,22 +11,25 @@ const audioFilename = 'recording.mp3';
 recorder.startRecording(audioFilename);
 
 // ユーザーの入力を待って録音を停止する
-process.stdin.on('data', (data) => {
+process.stdin.on('data', async (data) => {
   if (data.toString().trim() === 'stop') {
     console.log('Stopping recording...');
     
     recorder.stopRecording();
 
     // 音声を転写する
-    transcriber.transcribe(audioFilename)
-      .then((transcript) => {
-        console.log(transcript);
-      })
-      .catch((error) => {
-        console.error(`音声の転写に失敗しました: ${error.message}`);
-      }).finally(() => {
-        process.exit();
-      });
+    try {
+      const transcript = await transcriber.transcribe(audioFilename);
+      console.log(transcript);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`filed to transcribe: ${error.message}`);
+      } else {
+        console.error(`filed to transcribe : ${error}`);
+      }
+    } finally {
+      process.exit();
+    }
     
   }
 });
