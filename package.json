@@ -4,7 +4,7 @@
   "description": "A CLI tool for recording, transcribing, and generating markdown files",
   "main": "index.ts",
   "scripts": {
-    "start": "node index.js"
+    "start": "bun run index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "markdown": "^0.5.0",
-    "mic": "^2.1.2",
-    "node-record-lpcm16": "^1.0.1"
+    "node-audiorecorder": "^3.0.0",
+    "node-sox": "^1.0.0",
+    "openai": "^4.19.0"
   }
 }

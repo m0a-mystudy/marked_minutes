@@ -1,14 +1,13 @@
 
 import Recorder from './recorder';
 import Transcriber from './transcriber';
-import MarkdownGenerator from './markdownGenerator';
 
 const recorder = new Recorder();
 const transcriber = new Transcriber();
-const markdownGenerator = new MarkdownGenerator();
+// const markdownGenerator = new MarkdownGenerator();
 
-const audioFilename = 'recording.wav';
-const markdownFilename = 'transcript.md';
+const audioFilename = 'recording.mp3';
+// const markdownFilename = 'transcript.md';
 
 // 録音を開始する
 recorder.startRecording(audioFilename);
@@ -21,12 +20,12 @@ process.stdin.on('data', (data) => {
     // 音声を転写する
     transcriber.transcribe(audioFilename)
       .then((transcript) => {
-        // マークダウンを生成する
-        markdownGenerator.generateMarkdown(markdownFilename, transcript);
+        console.log('Transcript:', transcript);
       })
       .catch((error) => {
         console.error(`音声の転写に失敗しました: ${error.message}`);
       });
+    process.exit(0);
   }
 });
 

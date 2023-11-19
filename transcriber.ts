@@ -1,31 +1,56 @@
-
-import fs from 'fs';
-import { OpenAIApi, Configuration } from 'openai';
-import config from './config.json';
+import fs from "fs";
+import OpenAI from "openai";
 
 class Transcriber {
-  private openai: OpenAIApi;
+  private openai: OpenAI;
 
   constructor() {
-    const configuration = new Configuration({
-      apiKey: config.openai.api_key,
-    });
-    this.openai = new OpenAIApi(configuration);
+    this.openai = new OpenAI();
   }
 
   async transcribe(filename: string): Promise<string> {
-    const audioData = fs.readFileSync(filename);
-    const response = await this.openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: audioData.toString(),
-      temperature: 0.6,
-    });
+    try {
+      // 録音ファイルのストリームを作成
+      const audioFileStream = fs.createReadStream(filename);
 
-    if (response.status !== 200) {
-      throw new Error(`Failed to transcribe audio: ${response.statusText}`);
+      // Whisper APIに送信して文字起こしを行う
+      const transcriptionResponse =
+        await this.openai.audio.transcriptions.create({
+          model: "whisper-1",
+          language: "ja",
+          file: audioFileStream,
+          response_format: "json",
+        });
+
+      // 文字起こしの結果を表示
+      console.log("Transcription:", transcriptionResponse);
+
+      // GPT-4モデルを使用して文字起こし結果を要約
+      const summaryResponse = await this.openai.chat.completions.create({
+        model: "gpt-4-1106-preview",
+        messages: [
+          {
+            role: "system",
+            content:
+              "あなたは優秀な議事録記録者です。文字起こし内容を要約してmarkdown書式で纏めてください",
+          },
+          {
+            role: "user",
+            content:
+              "この内容を要約してmarkdownにまとめてください\n\n" +
+              transcriptionResponse.text,
+          },
+        ],
+        max_tokens: 1000,
+      });
+
+      // 要約結果を返す
+      return summaryResponse.choices[0].message.content || "";
+    } catch (error) {
+      console.error("Failed to transcribe audio:", error);
     }
 
-    return response.data.choices[0].text;
+    return "";
   }
 }
 

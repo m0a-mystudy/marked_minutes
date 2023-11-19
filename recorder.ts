@@ -1,36 +1,40 @@
-
-import fs from 'fs';
-import mic from 'mic';
-import config from './config.json';
+import fs from "fs";
+import AudioRecorder from "node-audiorecorder";
 
 class Recorder {
-  private micInstance: any;
-  private micInputStream: any;
-  private outputStream: any;
+  private audioRecorder: AudioRecorder;
 
   constructor() {
-    this.micInstance = mic({
-      rate: config.recording.sampleRate,
-      channels: config.recording.channels,
-      device: config.recording.device
+    this.audioRecorder = new AudioRecorder(
+      {
+        program: "sox",
+        silence: 0,
+        format: "mp3",
+      },
+      console
+    );
+    this.audioRecorder.on("error", function () {
+      console.warn("Recording error.");
     });
-    this.micInputStream = null;
-    this.outputStream = null;
+    this.audioRecorder.on("end", function () {
+      console.warn("Recording ended.");
+    });
   }
 
   startRecording(filename: string): void {
-    this.micInputStream = this.micInstance.getAudioStream();
-    this.outputStream = fs.createWriteStream(filename);
-    this.micInputStream.pipe(this.outputStream);
-    this.micInstance.start();
-    console.log('Recording started...');
+    console.log("Writing new recording file at:", filename);
+
+    // Create write stream.
+    const fileStream = fs.createWriteStream(filename, { encoding: "binary" });
+    this.audioRecorder.start().stream()?.pipe<any>(fileStream);
+
+    console.log("Recording started...");
   }
 
   stopRecording(): void {
-    this.micInstance.stop();
-    console.log('Recording stopped.');
+    this.audioRecorder.stop();
+    console.log("Recording stopped.");
   }
 }
 
 export default Recorder;
-
