@@ -1,0 +1,23 @@
+{
+  "name": "cli-tool",
+  "version": "1.0.0",
+  "description": "A CLI tool for recording, transcribing, and generating markdown files",
+  "main": "index.ts",
+  "scripts": {
+    "start": "bun run index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "markdown": "^0.5.0",
+    "node-audiorecorder": "^3.0.0",
+    "node-sox": "^1.0.0",
+    "openai": "^4.19.0"
+  }
+}
