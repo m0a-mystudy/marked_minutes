@@ -9,10 +9,12 @@ class Transcriber {
   }
 
   async transcribe(filename: string): Promise<string> {
+    console.log("Transcribing audio file:", filename);
     try {
       // 録音ファイルのストリームを作成
       const audioFileStream = fs.createReadStream(filename);
-
+      console.log("Created audio file stream.");
+      
       // Whisper APIに送信して文字起こしを行う
       const transcriptionResponse =
         await this.openai.audio.transcriptions.create({
@@ -22,6 +24,8 @@ class Transcriber {
           response_format: "json",
         });
 
+        console.log("Created transcription response.");
+        
       // 文字起こしの結果を表示
       console.log("Transcription:", transcriptionResponse);
 
