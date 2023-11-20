@@ -10,8 +10,10 @@ const transcriber = new Transcriber();
 
 const audioFilename = path.join(os.tmpdir(), "recording.mp3");
 process.on("exit", () => {
-  console.log("Removing audio file..."+ audioFilename);
-  fs.unlinkSync(audioFilename);
+  if (fs.existsSync(audioFilename)) {
+    console.log("Removing audio file..."+ audioFilename);
+    fs.unlinkSync(audioFilename);
+  }
 });
 
 // 録音を開始する
