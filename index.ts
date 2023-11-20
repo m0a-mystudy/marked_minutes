@@ -26,12 +26,12 @@ const summarize = async () => {
     console.log(transcript);
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`filed to transcribe: ${error.message}`);
+      console.error(`failed to transcribe: ${error.message}`);
     } else {
-      console.error(`filed to transcribe : ${error}`);
+      console.error(`failed to transcribe : ${error}`);
     }
   } finally {
-    process.exit();
+    
   }
 };
 // ctrl+cもしくはctrl+dで録音を停止する
