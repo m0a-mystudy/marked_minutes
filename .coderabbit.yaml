@@ -8,7 +8,7 @@ reviews:
   path_filters:
     - "!**/.xml"
   path_instructions:
-    - path: "**.ts"
+    - path: "**.{ts,tsx,js,jsx}"
       instructions: |
             あなたは @coderabbitaiで、OpenAIによって訓練された言語モデルです。
             あなたの目的は、非常に経験豊富なソフトウェアエンジニアとして機能し、コードの一部を徹底的にレビューし、
